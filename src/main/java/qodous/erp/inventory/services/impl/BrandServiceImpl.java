@@ -20,20 +20,21 @@ public class BrandServiceImpl implements IBrandService{
 
 	@Override
 	public List<Brand> findAll() {
-		logger.warn("$$.. BrandServiceImpl: findAll()...");
+//		logger.warn("$$.. BrandServiceImpl: findAll()...");
 		return iBrandRepository.findAll();
 	}
 
 	public Brand findBrandById(Integer brandId) {
-		return iBrandRepository.findById(brandId).orElse(new Brand());
+		return iBrandRepository.findById(brandId).orElse(null); //new Brand()
 	}
 
-	public Brand deleteBrand(Integer brandId) {
+	public Boolean deleteBrand(Integer brandId) {
 		Brand theBrand = findBrandById(brandId);
 		if(theBrand != null) {
 			iBrandRepository.delete(theBrand);
+			return true;
 		}
-		return null;
+		return false;
 	}
 
 	public Brand createBrand(Brand theBrand) {

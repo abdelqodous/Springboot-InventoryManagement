@@ -2,6 +2,7 @@ package qodous.erp.inventory.domain;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonFormat.Shape;
@@ -28,10 +29,10 @@ public class Brand implements Serializable{
 	@Column(name = "summary")
 	private String summary;
 	@Column(name = "created_at")
-	@JsonFormat(shape = Shape.STRING, pattern = "dd-MM-yyyy")
+	@JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-dd")
 	private Date createdAt;
 	@Column(name = "updated_at")
-	@JsonFormat(shape = Shape.STRING, pattern = "dd-MM-yyyy")
+	@JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-dd")
 	private Date updatedAt;
 	@Column(name = "content")
 	private String content;
@@ -94,6 +95,23 @@ public class Brand implements Serializable{
 
 	public void setContent(String content) {
 		this.content = content;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Brand other = (Brand) obj;
+		return Objects.equals(id, other.id);
 	}
 
 	@Override
