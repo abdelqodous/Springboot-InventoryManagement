@@ -1,4 +1,4 @@
-package qodous.erp.inventory.configuration;
+package qodous.erp.configuration;
 
 
 
