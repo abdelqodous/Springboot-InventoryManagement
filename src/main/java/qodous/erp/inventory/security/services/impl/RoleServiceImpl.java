@@ -13,7 +13,7 @@ public class RoleServiceImpl implements IRoleService {
     @Autowired
     IRoleRepository roleRepository;
 
-    public Optional<Role> findById(int roleId){
+    public Optional<Role> findById(Long roleId){
         return roleRepository.findById(roleId);
     }
 }

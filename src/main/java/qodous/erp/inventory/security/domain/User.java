@@ -19,7 +19,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 public class User implements UserDetails {
 	@Id
 	@GeneratedValue
-	private Integer id;
+	private Long id;
 	private String firstName;
 	private String middleName;
 	private String lastName;
@@ -42,7 +42,7 @@ public class User implements UserDetails {
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		List<SimpleGrantedAuthority> authorities = new ArrayList<SimpleGrantedAuthority>();
-		for (Role role: getUserRoles()) {
+		for (Role role: userRoles) {
 			authorities.add( new SimpleGrantedAuthority(role.getRoleNameEn()));
 		}
 
@@ -51,7 +51,7 @@ public class User implements UserDetails {
 
 	@Override
 	public String getPassword() {
-		return null;
+		return passwordHash;
 	}
 
 	@Override

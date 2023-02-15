@@ -5,5 +5,5 @@ import org.springframework.stereotype.Repository;
 import qodous.erp.inventory.security.domain.Role;
 
 @Repository
-public interface IRoleRepository  extends JpaRepository<Role, Integer> {
+public interface IRoleRepository  extends JpaRepository<Role, Long> {
 }

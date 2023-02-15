@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import qodous.erp.inventory.configuration.JwtService;
@@ -21,13 +22,12 @@ public class AuthenticationService implements IAuthenticationService {
     @Autowired PasswordEncoder passwordEncoder;
     @Autowired IRoleService roleService;
     @Autowired JwtService jwtService;
-    @Autowired
-    AuthenticationManager authManager;
+    @Autowired AuthenticationManager authManager;
     @Override
     public AuthenticationResponse register(RegisterRequest registerRequest) {
         System.out.println("$$.. in AuthenticationService: register");
         List <Role> defaultRole = new ArrayList<>();
-        defaultRole.add(roleService.findById(1).orElseThrow());
+        defaultRole.add(roleService.findById(1L).orElseThrow());
         var user = User
                 .builder()
                 .firstName(registerRequest.getFirstName())
@@ -37,7 +37,7 @@ public class AuthenticationService implements IAuthenticationService {
                 .userRoles(defaultRole)
                 .build();
         userRepository.save(user);
-        var token = jwtService.generateToken(user);
+        String token = jwtService.generateToken(user);
         System.out.println("$$.. Token: " +token);
         return AuthenticationResponse
                 .builder()
@@ -55,7 +55,7 @@ public class AuthenticationService implements IAuthenticationService {
         );
         System.out.println("$$.. var user = userRepository.findByUserName ");
         var user = userRepository.findByUserName(authRequest.getUserName())
-                .orElseThrow();
+                .orElseThrow(() -> new UsernameNotFoundException("could not authenticate user, user not found!!"));
         System.out.println("$$.. last name: " +user.getLastName());
         var token = jwtService.generateToken(user);
         System.out.println("$$.. token: " +token);

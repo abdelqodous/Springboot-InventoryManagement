@@ -17,7 +17,7 @@ import java.util.List;
 public class Role {
 	@Id
 	@GeneratedValue
-	private Integer roleId;
+	private Long roleId;
 	private String roleNameAr;
 	private String roleNameEn;
 	private String note;

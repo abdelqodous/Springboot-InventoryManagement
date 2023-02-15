@@ -6,15 +6,15 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 
 import org.springframework.stereotype.Service;
+import qodous.erp.inventory.security.repositories.IUserRepository;
 import qodous.erp.inventory.security.services.IUserService;
 
 @Service
 public class UserServiceImpl implements IUserService {
-	@Autowired
-    qodous.erp.inventory.security.repositories.IUserRepository IUserRepository;
+	@Autowired IUserRepository userRepository;
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		return IUserRepository.findByUserName(username).orElseThrow(() -> new UsernameNotFoundException("User not found!!"));
+		return userRepository.findByUserName(username).orElseThrow(() -> new UsernameNotFoundException("User not found!!"));
 	}
 }

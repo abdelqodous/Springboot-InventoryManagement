@@ -16,13 +16,13 @@ public class AuthenticationController {
     private static final Logger logger = LoggerFactory.getLogger(AuthenticationController.class);
     @Autowired IAuthenticationService authService;
 
-    @RequestMapping(method = RequestMethod.POST, value = "/register")
+    @PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> register(@RequestBody RegisterRequest registerRequest){
         System.out.println("$$.. in register api");
         return ResponseEntity.ok( authService.register(registerRequest));
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/authenticate")
+    @PostMapping( "/authenticate")
     public ResponseEntity<AuthenticationResponse> authenticate( @RequestBody AuthenticationRequest authRequest ){
         System.out.println("$$.. in authenticate api");
         return ResponseEntity.ok( authService.authenticate(authRequest));

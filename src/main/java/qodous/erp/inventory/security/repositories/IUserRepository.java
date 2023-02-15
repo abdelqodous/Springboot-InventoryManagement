@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import qodous.erp.inventory.security.domain.User;
 
 @Repository
-public interface IUserRepository extends JpaRepository<User, Integer> {
+public interface IUserRepository extends JpaRepository<User, Long> {
 
 	Optional<User> findByUserName(String userName);
 }
