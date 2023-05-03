@@ -12,6 +12,7 @@ import qodous.erp.inventory.store.repositories.IBrandRepository;
 import qodous.erp.inventory.store.services.IBrandService;
 
 @Service
+
 public class BrandServiceImpl implements IBrandService {
 	private static final Logger logger = LoggerFactory.getLogger(BrandServiceImpl.class);
 	

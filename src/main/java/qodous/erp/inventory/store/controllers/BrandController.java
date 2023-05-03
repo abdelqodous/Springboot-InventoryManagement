@@ -6,24 +6,22 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import qodous.erp.inventory.store.domain.Brand;
 import qodous.erp.inventory.store.services.impl.BrandServiceImpl;
 
-@CrossOrigin(origins = {
-		"http://localhost:4200",
-		"http://127.0.0.1:4200",
-		"http://192.168.57.198:4200"
-})
+@CrossOrigin(
+		maxAge = 3600,
+		origins = {
+			"http://localhost:4200",
+			"http://127.0.0.1:4200",
+			"http://192.168.57.198:4200"
+		})
 @RestController
 @RequestMapping("/v1/api/inventory")
 public class BrandController {
@@ -31,10 +29,16 @@ public class BrandController {
 	
 	@Autowired
 	BrandServiceImpl brandService;
-	
-	@RequestMapping(method = RequestMethod.GET, value = "/brands")
-	public List<Brand> allBrands(){
-		return brandService.findAll();
+
+	@CrossOrigin(origins = "http://localhost:4200", allowedHeaders = "Requestor-Type", exposedHeaders = "X-Get-Header")
+	@GetMapping("brands")
+	public ResponseEntity<List<Brand>> allBrands(){
+		System.out.println("$$.. BrandController:allBrands");
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("X-Get-Header", "ExampleHeader");
+		return ResponseEntity.ok().body(brandService.findAll());
+
+//		return brandService.findAll();
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/failure")
@@ -42,13 +46,14 @@ public class BrandController {
 		throw new RuntimeException("$$.. An error has been occurred!! contact administrator @ **-***-***");
 	}
 	
-	@RequestMapping(method = RequestMethod.GET, value = "/brands/{brandId}")
-	public Brand findBrandById(@PathVariable Integer brandId){
+	@GetMapping("brands/{brandId}")
+	public ResponseEntity<Brand> findBrandById(@PathVariable Integer brandId){
 		System.out.println("$$.. BrandController:findBrandById");
-		return brandService.findBrandById(brandId);
+		Brand brand =  brandService.findBrandById(brandId);
+		return new ResponseEntity<Brand>(brand, HttpStatus.OK);
 	}
 	
-	@RequestMapping(method = RequestMethod.POST, value = "/brands")
+	@PostMapping("brands")
 	public ResponseEntity<Brand> createBrand(@RequestBody Brand theBrand){
 		Brand createdBrand = brandService.createBrand(theBrand);
 		URI uri = ServletUriComponentsBuilder.fromHttpUrl("http://localhost:9090/api/inventory/v1/brands").
@@ -56,13 +61,13 @@ public class BrandController {
 		return ResponseEntity.created(uri).build();
 	}
 	
-	@RequestMapping(method = RequestMethod.PUT, value = "/brands/{brandId}")
+	@PutMapping("brands/{brandId}")
 	public ResponseEntity<Brand> updateBrand(@RequestBody Brand theBrand){
 		Brand updatedBrand = brandService.updateBrand(theBrand);
 		return new ResponseEntity<Brand>(updatedBrand, HttpStatus.OK);
 	}
 	
-	@RequestMapping(method = RequestMethod.DELETE, value = "/brands/{brandId}")
+	@DeleteMapping("brands/{brandId}")
 	public ResponseEntity<Void> deleteBrand(@PathVariable Integer brandId){
 		Boolean brandDeleted =brandService.deleteBrand(brandId); 
 		if(!brandDeleted) {

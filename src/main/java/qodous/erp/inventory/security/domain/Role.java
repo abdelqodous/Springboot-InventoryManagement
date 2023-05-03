@@ -17,10 +17,10 @@ import java.util.List;
 public class Role {
 	@Id
 	@GeneratedValue
-	private Long roleId;
+	private Integer id;
 	private String roleNameAr;
 	private String roleNameEn;
 	private String note;
-	@ManyToMany(mappedBy = "userRoles")
+	@ManyToMany(mappedBy = "roles")
 	private List<User> users;
 }

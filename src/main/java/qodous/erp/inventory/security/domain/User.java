@@ -19,7 +19,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 public class User implements UserDetails {
 	@Id
 	@GeneratedValue
-	private Long id;
+	private Integer id;
 	private String firstName;
 	private String middleName;
 	private String lastName;
@@ -32,17 +32,15 @@ public class User implements UserDetails {
 	private String intro;
 	private String profile;
 	private Integer isActive;
-	@ManyToMany()
-	@JoinTable(
-			name = "user_role",
-			joinColumns = @JoinColumn(name = "userId"),
-			inverseJoinColumns = @JoinColumn(name = "roleId"))
-	private List<Role> userRoles;
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(name = "user_role",
+			joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"))
+	private List<Role> roles;
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		List<SimpleGrantedAuthority> authorities = new ArrayList<SimpleGrantedAuthority>();
-		for (Role role: userRoles) {
+		for (Role role: roles) {
 			authorities.add( new SimpleGrantedAuthority(role.getRoleNameEn()));
 		}
 

@@ -8,13 +8,14 @@ import org.springframework.web.bind.annotation.*;
 import qodous.erp.inventory.security.domain.AuthenticationRequest;
 import qodous.erp.inventory.security.domain.AuthenticationResponse;
 import qodous.erp.inventory.security.domain.RegisterRequest;
-import qodous.erp.inventory.security.services.IAuthenticationService;
+import qodous.erp.inventory.security.services.AuthenticationService;
 
 @RestController
 @RequestMapping("/api/v1/auth")
 public class AuthenticationController {
     private static final Logger logger = LoggerFactory.getLogger(AuthenticationController.class);
-    @Autowired IAuthenticationService authService;
+    @Autowired
+    AuthenticationService authService;
 
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> register(@RequestBody RegisterRequest registerRequest){

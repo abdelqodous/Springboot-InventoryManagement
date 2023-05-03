@@ -1,4 +1,4 @@
-package qodous.erp.inventory.configuration;
+package qodous.erp.inventory.security.services;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -27,23 +27,7 @@ public class JwtService {
         return claimsResolver.apply(claims);
     }
 
-    private Claims extractAllClaim(String token){
-        return Jwts
-                .parserBuilder()
-                .setSigningKey(getSignInKey())
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
-    }
-
-    private Key getSignInKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
-        return Keys.hmacShaKeyFor(keyBytes);
-    }
-
-    public String generateToken(UserDetails userDetails){
-        return generateToken(new HashMap<>(), userDetails);
-    }
+    public String generateToken(UserDetails userDetails){ return generateToken(new HashMap<>(), userDetails); }
 
     public String generateToken(
             Map<String, Object> extraClaims,
@@ -59,8 +43,18 @@ public class JwtService {
                 .compact();
     }
 
-    public Date getExpirationDate() {
-        return new Date(System.currentTimeMillis() + 1000*60*24);
+    private Claims extractAllClaim(String token){
+        return Jwts
+                .parserBuilder()
+                .setSigningKey(getSignInKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+    }
+
+    private Key getSignInKey() {
+        byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
+        return Keys.hmacShaKeyFor(keyBytes);
     }
 
     public boolean isTokenValid(String token, UserDetails userDetails){
