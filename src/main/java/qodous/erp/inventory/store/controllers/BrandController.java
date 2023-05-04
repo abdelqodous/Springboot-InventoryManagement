@@ -1,27 +1,19 @@
 package qodous.erp.inventory.store.controllers;
 
-import java.net.URI;
-import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
 import qodous.erp.inventory.store.domain.Brand;
 import qodous.erp.inventory.store.services.impl.BrandServiceImpl;
 
-@CrossOrigin(
-		maxAge = 3600,
-		origins = {
-			"http://localhost:4200",
-			"http://127.0.0.1:4200",
-			"http://192.168.57.198:4200"
-		})
+import java.net.URI;
+import java.util.List;
+
+@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
 @RestController
 @RequestMapping("/v1/api/inventory")
 public class BrandController {
@@ -30,15 +22,9 @@ public class BrandController {
 	@Autowired
 	BrandServiceImpl brandService;
 
-	@CrossOrigin(origins = "http://localhost:4200", allowedHeaders = "Requestor-Type", exposedHeaders = "X-Get-Header")
-	@GetMapping("brands")
+	@GetMapping("/brands")
 	public ResponseEntity<List<Brand>> allBrands(){
-		System.out.println("$$.. BrandController:allBrands");
-		HttpHeaders headers = new HttpHeaders();
-		headers.set("X-Get-Header", "ExampleHeader");
 		return ResponseEntity.ok().body(brandService.findAll());
-
-//		return brandService.findAll();
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/failure")
@@ -48,7 +34,6 @@ public class BrandController {
 	
 	@GetMapping("brands/{brandId}")
 	public ResponseEntity<Brand> findBrandById(@PathVariable Integer brandId){
-		System.out.println("$$.. BrandController:findBrandById");
 		Brand brand =  brandService.findBrandById(brandId);
 		return new ResponseEntity<Brand>(brand, HttpStatus.OK);
 	}
@@ -56,6 +41,7 @@ public class BrandController {
 	@PostMapping("brands")
 	public ResponseEntity<Brand> createBrand(@RequestBody Brand theBrand){
 		Brand createdBrand = brandService.createBrand(theBrand);
+		System.out.println("Created Brand: " +createdBrand.getTitle());
 		URI uri = ServletUriComponentsBuilder.fromHttpUrl("http://localhost:9090/api/inventory/v1/brands").
 				path("/{id}").buildAndExpand(createdBrand.getId()).toUri();
 		return ResponseEntity.created(uri).build();
@@ -64,6 +50,7 @@ public class BrandController {
 	@PutMapping("brands/{brandId}")
 	public ResponseEntity<Brand> updateBrand(@RequestBody Brand theBrand){
 		Brand updatedBrand = brandService.updateBrand(theBrand);
+		System.out.println("Created Brand: " +updatedBrand.getContent());
 		return new ResponseEntity<Brand>(updatedBrand, HttpStatus.OK);
 	}
 	
